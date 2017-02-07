@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
             mViewPager.setAdapter(mSectionsPagerAdapter);
             saveListener.save();
         }
+        else {
+            CommonData.bicycles.get(CommonData.currentFragment).setRefresh(true);
+            Bicycle.refresh(CommonData.currentFragment, CommonData.currentOnAsyncTaskListener);
+        }
     }
 
     @Override

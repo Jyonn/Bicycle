@@ -57,7 +57,7 @@ public class AccountActivity extends AppCompatActivity {
                         bicycle.getThreadTask().cancel(true);
                         bicycle.setThreadTaskNull();
                     }
-                    bicycle.setRefresh(true);
+//                    bicycle.setRefresh(true);
                     setResult(2);
                 }
                 finish();

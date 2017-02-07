@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class PlaceholderFragment extends Fragment {
@@ -21,6 +22,9 @@ public class PlaceholderFragment extends Fragment {
     ImageView imageView;
     TextView startTextView, endTextView, nameTextView;
     int sessionNumber;
+    LinearLayout startLinearLayout, endLinearLayout;
+    TextView historyTextView;
+
     static Context context;
     static MainActivity.SectionsPagerAdapter sectionsPagerAdapter;
     static ViewPager viewPager;
@@ -65,6 +69,10 @@ public class PlaceholderFragment extends Fragment {
         endTextView = (TextView) rootView.findViewById(R.id.end_place);
         nameTextView = (TextView) rootView.findViewById(R.id.name);
 
+        startLinearLayout = (LinearLayout) rootView.findViewById(R.id.start_block);
+        endLinearLayout = (LinearLayout) rootView.findViewById(R.id.end_block);
+        historyTextView = (TextView) rootView.findViewById(R.id.no_history);
+
         sessionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         Bicycle.refresh(sessionNumber, onAsyncTaskListener);
 
@@ -84,6 +92,7 @@ public class PlaceholderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 CommonData.bicycles.remove(sessionNumber);
+                CommonData.currentFragment = -1;
                 saveListener.save();
                 viewPager.setAdapter(sectionsPagerAdapter);
             }
@@ -102,8 +111,15 @@ public class PlaceholderFragment extends Fragment {
 
             BicycleRecord bicycleRecord = bicycle.getBicycleRecord();
             if (bicycleRecord != null) {
+                historyTextView.setVisibility(View.INVISIBLE);
+                startLinearLayout.setVisibility(View.VISIBLE);
+                endLinearLayout.setVisibility(View.VISIBLE);
                 startTextView.setText(bicycleRecord.getStartPoint() + " " + bicycleRecord.getStartTime());
                 endTextView.setText(bicycleRecord.getEndPoint() + " " + bicycleRecord.getEndTime());
+            } else {
+                historyTextView.setVisibility(View.VISIBLE);
+                startLinearLayout.setVisibility(View.INVISIBLE);
+                endLinearLayout.setVisibility(View.INVISIBLE);
             }
 
             UserInfo userInfo = bicycle.getUserInfo();
