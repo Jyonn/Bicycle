@@ -1,6 +1,7 @@
 package cn.a6_79.bicycle;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -91,10 +92,16 @@ public class PlaceholderFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonData.bicycles.remove(sessionNumber);
-                CommonData.currentFragment = -1;
-                saveListener.save();
-                viewPager.setAdapter(sectionsPagerAdapter);
+                Dialog.showSimpleDialog(context, "提示", "删除后将无法恢复，是否确认删除？", "确定", "取消",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                CommonData.bicycles.remove(sessionNumber);
+                                CommonData.currentFragment = -1;
+                                saveListener.save();
+                                viewPager.setAdapter(sectionsPagerAdapter);
+                            }
+                        }, null, true);
             }
         });
         return rootView;
