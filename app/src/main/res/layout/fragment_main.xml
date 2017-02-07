@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/history_record"
-        android:textSize="10sp"/>
+        android:textSize="12sp"/>
     <View
         android:layout_width="153dp"
         android:layout_height="1dp"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_history"
         android:layout_marginEnd="10dp"
-        android:textSize="10sp"/>
+        android:textSize="12sp"/>
     <LinearLayout
         android:id="@+id/start_block"
         android:layout_width="match_parent"
@@ -43,12 +43,12 @@
             android:layout_height="wrap_content"
             android:text="@string/start_text"
             android:layout_marginEnd="10dp"
-            android:textSize="10sp"/>
+            android:textSize="12sp"/>
         <TextView
             android:id="@+id/start_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"/>
+            android:textSize="12sp"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/end_block"
@@ -62,17 +62,17 @@
             android:layout_height="wrap_content"
             android:text="@string/end_text"
             android:layout_marginEnd="10dp"
-            android:textSize="10sp"/>
+            android:textSize="12sp"/>
         <TextView
             android:id="@+id/end_place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"/>
+            android:textSize="12sp"/>
     </LinearLayout>
     <ImageView
         android:id="@+id/bicycle_image"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="160dp"
         android:contentDescription="@string/bicycle_code" />
     <LinearLayout
         android:layout_width="match_parent"
