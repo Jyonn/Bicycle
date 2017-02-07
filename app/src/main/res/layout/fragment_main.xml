@@ -74,23 +74,4 @@
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:contentDescription="@string/bicycle_code" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp">
-        <Button
-            android:id="@+id/action_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/modify"
-            android:background="@color/background"/>
-        <Button
-            android:id="@+id/action_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/delete"
-            android:background="@color/colorAccent"
-            android:textColor="@color/background"/>
-    </LinearLayout>
 </LinearLayout>

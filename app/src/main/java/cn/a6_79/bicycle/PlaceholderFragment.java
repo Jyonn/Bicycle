@@ -26,11 +26,6 @@ public class PlaceholderFragment extends Fragment {
     LinearLayout startLinearLayout, endLinearLayout;
     TextView historyTextView;
 
-    static Context context;
-    static MainActivity.SectionsPagerAdapter sectionsPagerAdapter;
-    static ViewPager viewPager;
-    static SaveListener saveListener;
-
     public PlaceholderFragment() {
     }
 
@@ -47,14 +42,8 @@ public class PlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(
-            int sectionNumber, Context context, SaveListener saveListener,
-            MainActivity.SectionsPagerAdapter sectionsPagerAdapter, ViewPager viewPager) {
+    public static PlaceholderFragment newInstance(int sectionNumber) {
         PlaceholderFragment fragment = new PlaceholderFragment();
-        PlaceholderFragment.context = context;
-        PlaceholderFragment.sectionsPagerAdapter = sectionsPagerAdapter;
-        PlaceholderFragment.viewPager = viewPager;
-        PlaceholderFragment.saveListener = saveListener;
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -77,33 +66,6 @@ public class PlaceholderFragment extends Fragment {
         sessionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         Bicycle.refresh(sessionNumber, onAsyncTaskListener);
 
-        Button modifyButton = (Button) rootView.findViewById(R.id.action_modify);
-        modifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, AccountActivity.class);
-                intent.putExtra(AccountActivity.transType, AccountActivity.transTypeModify);
-                intent.putExtra(AccountActivity.transIndex, sessionNumber);
-                startActivityForResult(intent, 1);
-            }
-        });
-
-        Button deleteButton = (Button) rootView.findViewById(R.id.action_delete);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Dialog.showSimpleDialog(context, "提示", "删除后将无法恢复，是否确认删除？", "确定", "取消",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                CommonData.bicycles.remove(sessionNumber);
-                                CommonData.currentFragment = -1;
-                                saveListener.save();
-                                viewPager.setAdapter(sectionsPagerAdapter);
-                            }
-                        }, null, true);
-            }
-        });
         return rootView;
     }
 
