@@ -72,6 +72,6 @@
     <ImageView
         android:id="@+id/bicycle_image"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="140dp"
         android:contentDescription="@string/bicycle_code" />
 </LinearLayout>

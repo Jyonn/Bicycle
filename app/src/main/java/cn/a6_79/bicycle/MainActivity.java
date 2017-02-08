@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +14,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -60,14 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         final FloatingActionsMenu menu = (FloatingActionsMenu) findViewById(R.id.fabMenu);
-        menu.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Log.d("focus", ""+b);
-                if (!b)
-                    menu.collapse();
-            }
-        });
+        CommonData.menu = menu;
 
         FloatingActionButton fabRefresh = (FloatingActionButton) findViewById(R.id.fabRefresh);
         fabRefresh.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 menu.collapse();
-                if (CommonData.currentFragment == -1) {
+                if (CommonData.currentFragment == -1 || CommonData.currentFragment >= CommonData.bicycles.size()) {
                     Snackbar.make(view, "没有数据需要删除", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
@@ -115,14 +109,26 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 CommonData.bicycles.remove(CommonData.currentFragment);
-                                CommonData.currentFragment = -1;
+                                CommonData.currentFragment = 0;
                                 saveListener.save();
                                 mViewPager.setAdapter(mSectionsPagerAdapter);
+                                if (CommonData.bicycles.size() == 0) {
+                                    Intent intent = new Intent(context, AccountActivity.class);
+                                    intent.putExtra(AccountActivity.transType, AccountActivity.transTypeAdd);
+                                    startActivityForResult(intent, 1);
+
+                                }
                             }
                         }, null, true);
                 }
             }
         });
+
+        if (CommonData.bicycles.size() == 0) {
+            Intent intent = new Intent(this, AccountActivity.class);
+            intent.putExtra(AccountActivity.transType, AccountActivity.transTypeAdd);
+            startActivityForResult(intent, 1);
+        }
 
         saveListener = new SaveListener() {
             @Override
@@ -134,14 +140,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (CommonData.bicycles.size() == 0) {
+            Log.d("Finish", "true");
+            finish();
+        }
+        Log.d("Finish", "false");
         if (resultCode == 1) {
             mSectionsPagerAdapter.getItem(CommonData.bicycles.size() - 1);
             mViewPager.setAdapter(mSectionsPagerAdapter);
             saveListener.save();
         }
-        else {
-            CommonData.bicycles.get(CommonData.currentFragment).setRefresh(true);
-            Bicycle.refresh(CommonData.currentFragment, CommonData.currentOnAsyncTaskListener);
+        else if (requestCode == 2) {
+            if (CommonData.currentFragment >= 0) {
+                CommonData.bicycles.get(CommonData.currentFragment).setRefresh(true);
+                Bicycle.refresh(CommonData.currentFragment, CommonData.currentOnAsyncTaskListener);
+            }
         }
     }
 
@@ -170,6 +183,19 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < CommonData.bicycles.size(); i++)
                 CommonData.bicycles.get(i).setRefresh(true);
             Bicycle.refresh(CommonData.currentFragment, CommonData.currentOnAsyncTaskListener);
+            return true;
+        }
+        else if (id == R.id.action_about) {
+            Dialog.showSimpleDialog(
+                    context, "关于", "浙江省江山市公共自行车租借应用", "确定", "源代码", null,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Uri uri = Uri.parse("https://www.github.com/lqj679ssn/Bicycle/");
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        }
+                    }, true);
             return true;
         }
 

@@ -1,15 +1,11 @@
 package cn.a6_79.bicycle;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,8 +29,15 @@ public class PlaceholderFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+            if (CommonData.menu.isExpanded())
+                CommonData.menu.collapse();
             CommonData.currentFragment = getArguments().getInt(ARG_SECTION_NUMBER);
             CommonData.currentOnAsyncTaskListener = onAsyncTaskListener;
+            Bicycle bicycle = CommonData.bicycles.get(CommonData.currentFragment);
+            if (bicycle.needRefreshJudgedByInterval()) {
+                bicycle.setRefresh(true);
+                Bicycle.refresh(CommonData.currentFragment, onAsyncTaskListener);
+            }
         }
     }
 
@@ -93,8 +96,10 @@ public class PlaceholderFragment extends Fragment {
 
             UserInfo userInfo = bicycle.getUserInfo();
             if (userInfo != null) {
-                nameTextView.setText(userInfo.getRealname());
+                nameTextView.setText(userInfo.getRealName());
             }
+
+            bicycle.setRefreshTimestamp();
         }
     };
 }

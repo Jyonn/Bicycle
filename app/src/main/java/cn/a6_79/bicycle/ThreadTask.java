@@ -3,6 +3,8 @@ package cn.a6_79.bicycle;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -97,6 +99,13 @@ class ThreadTask extends AsyncTask<Void, Integer, Bicycle> {
     }
 
     private String getBicycleUrl(String bicycleData) {
+        if (bicycleData == null)
+            bicycleData = "已被租用";
+        try {
+            bicycleData = URLEncoder.encode(bicycleData, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return "http://www.lbbcol.com/Barcode.aspx?BarcodeType=CODE128A&Data="+bicycleData
                     +"&ImageFormat=Png&CopyrightText=%20"
                     +"&BarWidth=1&Height=120&AddOnTextPosition=NotShown&InvalidDataAction=DisplayTextOnly";
